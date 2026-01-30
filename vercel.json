@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/**",
-      "use": "@vercel/static"
-    }
+  "public": "src",
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "src",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "src/index.html" }
+  "headers": [
+    {
+      "source": "/assets/js/modules/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
   ]
 }

@@ -1981,5 +1981,23 @@
         </p>
       </div>
     </footer>
+    <script type="module">
+      import { initServices } from '/assets/js/modules/services.js';
+      import { initServiceDetail } from '/assets/js/modules/service-detail.js';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize services carousel on homepage
+        const carousel = document.getElementById('services-carousel');
+        if (carousel) {
+          initServices();
+        }
+
+        // Initialize service detail page
+        const detailContainer = document.getElementById('service-page-container');
+        if (detailContainer) {
+          initServiceDetail();
+        }
+      });
+    </script>
   </body>
 </html>
