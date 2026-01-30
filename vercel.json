@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "public": "src",
-  "buildCommand": "echo 'Static site - no build needed'",
   "outputDirectory": "src",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
@@ -10,8 +8,7 @@
     {
       "source": "/assets/js/modules/(.*)",
       "headers": [
-        { "key": "Content-Type", "value": "application/javascript" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
+        { "key": "Content-Type", "value": "application/javascript" }
       ]
     }
   ]
