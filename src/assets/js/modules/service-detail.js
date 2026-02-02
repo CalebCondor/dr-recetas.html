@@ -258,6 +258,7 @@ const renderOtherServices = (categories, currentSlug) => {
   if (filtered.length === 0) return "";
 
   const carouselId = `carousel-${Math.random().toString(36).substring(2, 11)}`;
+  const dotsId = `dots-${carouselId}`;
 
   return `
     <section class="w-full py-20 bg-transparent relative overflow-hidden">
@@ -288,23 +289,23 @@ const renderOtherServices = (categories, currentSlug) => {
                                     <img src="${cat.imagen}" alt="${cat.nombre}" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-75" loading="lazy">
                                 </div>
                                 <div class="card-overlay absolute inset-0 z-10 opacity-30 bg-black transition-all duration-500 group-hover:opacity-50 group-hover:backdrop-blur-[2px]"></div>
-
-                                <div class="card-initial absolute inset-x-0 bottom-0 p-8 lg:p-10 z-20 pointer-events-none transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
-                                    <h3 class="font-black text-white text-3xl leading-tight tracking-tight drop-shadow-2xl">
+                                
+                                <div class="card-initial absolute inset-x-0 bottom-0 p-8 lg:p-12 z-20 pointer-events-none transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
+                                    <h3 class="font-black text-white text-3xl lg:text-4xl leading-tight tracking-tight drop-shadow-2xl">
                                         ${cat.nombre}
                                     </h3>
                                 </div>
 
-                                <div class="card-hover-content absolute inset-0 z-30 flex flex-col justify-end p-8 lg:p-10 gap-6 opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-                                    <div class="space-y-4">
-                                        <h3 class="font-black text-white text-3xl lg:text-4xl leading-[0.95] tracking-tighter">
+                                <div class="card-hover-content absolute inset-0 z-30 flex flex-col justify-end p-8 lg:p-12 gap-6 opacity-0 translate-y-8 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+                                    <div class="space-y-6">
+                                        <h3 class="font-black text-white text-4xl lg:text-5xl leading-[0.95] tracking-tighter">
                                             ${cat.nombre}
                                         </h3>
-                                        <p class="text-base font-medium leading-relaxed text-white/95 line-clamp-4">
+                                        <p class="text-base lg:text-lg font-medium leading-relaxed text-white/95 line-clamp-4">
                                             ${cat.lead || ""}
                                         </p>
                                         <div class="pt-2">
-                                            <div class="relative w-full flex items-center justify-between px-6 py-3 rounded-full font-bold text-sm bg-white/20 text-white border border-white/20 backdrop-blur-md transition-transform active:scale-95">
+                                            <div class="relative w-full flex items-center justify-between px-6 py-4 rounded-3xl font-bold text-sm bg-white/20 text-white border border-white/20 backdrop-blur-md transition-transform active:scale-95">
                                                 <span>Ver categoría</span>
                                                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white/30">
                                                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-14c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-12c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2v-4h2v4zm5 4h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
@@ -321,7 +322,7 @@ const renderOtherServices = (categories, currentSlug) => {
                 </div>
 
                 <!-- Dots Navigation -->
-                <div id="carousel-dots-${carouselId}" class="flex justify-center gap-3 mt-4">
+                <div id="${dotsId}" class="flex justify-center gap-3 mt-12">
                 </div>
             </div>
         </div>
@@ -330,96 +331,197 @@ const renderOtherServices = (categories, currentSlug) => {
         <script>
             (function() {
                 const carousel = document.getElementById('${carouselId}');
-                const dotsContainer = document.getElementById('carousel-dots-${carouselId}');
+                const dotsContainer = document.getElementById('${dotsId}');
                 if (!carousel || !dotsContainer) return;
 
                 const items = carousel.querySelectorAll('.carousel-item');
-                let currentIndex = 0;
+                let currentPageIdx = -1;
 
-                const updateDots = () => {
-                    const totalDots = items.length;
-                     // Only show dots if there are items
-                    if (totalDots === 0) return;
-
-                    dotsContainer.innerHTML = Array.from({ length: totalDots }).map((_, i) => \`
-                        <button class="transition-all duration-500 h-2 rounded-full \${i === currentIndex ? 'bg-[#0D4B4D] w-8' : 'bg-[#0D4B4D]/20 w-2'}" data-index="\${i}" aria-label="Ver servicio \${i + 1}"></button>
-                    \`).join("");
-
-                    dotsContainer.querySelectorAll('button').forEach(dot => {
-                        dot.onclick = () => {
-                            const targetIdx = parseInt(dot.dataset.index);
-                            scrollToIndex(targetIdx);
-                        };
-                    });
-                };
-
-                 const scrollToIndex = (index) => {
-                    const itemWidth = items[0].offsetWidth; // Approximate width including gap
-                    // For better precision we can calculate specifically
-                    const left = items[index].offsetLeft - carousel.offsetLeft - (window.innerWidth - items[index].offsetWidth)/2 + 16; 
-                    
-                    carousel.scrollTo({
-                        left: items[index].offsetLeft - (carousel.clientWidth - items[index].clientWidth) / 2, // Center the item
-                        behavior: 'smooth'
-                    });
-                };
-
+                // Fluid UI Update Logic
                 const updateUI = () => {
-                     // Find the center item
-                    const centerPoint = carousel.scrollLeft + (carousel.clientWidth / 2);
-                    
-                    let bestCandidate = 0;
-                    let minDistance = Infinity;
+                    const isDesktop = window.innerWidth >= 1024;
+                    const scrollLeft = carousel.scrollLeft;
+                    const carouselWidth = carousel.clientWidth;
+                    const maxScroll = carousel.scrollWidth - carouselWidth;
 
+                    let activePage;
+                    let totalPages;
+
+                    if (isDesktop) {
+                        totalPages = 2; // Split into roughly 2 "pages" on desktop
+                        activePage = scrollLeft > maxScroll / 2 ? 1 : 0;
+                    } else {
+                        totalPages = items.length;
+                        const itemWidth = items[0].offsetWidth + 32; // width + padding/gap approx
+                        activePage = Math.min(
+                            items.length - 1,
+                            Math.max(0, Math.round(scrollLeft / itemWidth)),
+                        );
+                    }
+
+                    if (activePage !== currentPageIdx) {
+                        currentPageIdx = activePage;
+
+                        dotsContainer.innerHTML = Array.from({ length: totalPages })
+                            .map(
+                            (_, i) => \`
+                                    <button class="carousel-dot h-2 rounded-full transition-all duration-300 \${i === activePage ? "bg-teal-600 w-8" : "bg-teal-600/20 w-2"}" data-page="\${i}" aria-label="Page \${i + 1}"></button>
+                                \`,
+                            )
+                            .join("");
+
+                        dotsContainer.querySelectorAll(".carousel-dot").forEach((dot, i) => {
+                            dot.onclick = () => {
+                                const target = isDesktop
+                                    ? i === 0
+                                    ? 0
+                                    : maxScroll
+                                    : i * (items[0].offsetWidth + 32); // approximate gap
+                                carousel.style.scrollBehavior = "smooth";
+                                carousel.scrollTo({ left: target });
+                            };
+                        });
+                    }
+
+                    // Active State & Mobile Reveal
                     items.forEach((item, i) => {
-                        const itemCenter = item.offsetLeft + (item.clientWidth / 2) - carousel.offsetLeft; // Adjust for carousel offset
-                        const dist = Math.abs(centerPoint - itemCenter);
-                        
-                        if (dist < minDistance) {
-                            minDistance = dist;
-                            bestCandidate = i;
+                        const card = item.querySelector(".service-card");
+                        if (!isDesktop) {
+                            const isActive = i === activePage;
+                            if (isActive) {
+                                card?.classList.add("active-card");
+                                item.style.opacity = "1";
+                                item.style.transform = "scale(1) translateZ(0)";
+                            } else {
+                                card?.classList.remove("active-card");
+                                // More subtle scale effect
+                                item.style.opacity = "0.5";
+                                item.style.transform = "scale(0.95) translateZ(0)";
+                            }
+                        } else {
+                            item.style.opacity = "1";
+                            item.style.transform = "scale(1) translateZ(0)";
+                            card?.classList.remove("active-card");
                         }
                     });
+                };
 
-                    if (currentIndex !== bestCandidate) {
-                        currentIndex = bestCandidate;
-                        updateDots();
-                        
-                        // Optional: Add active class for scaling like testimonials if desired
-                        items.forEach((item, idx) => {
-                             const card = item.querySelector('.service-card');
-                             if (idx === currentIndex && window.innerWidth < 768) {
-                                  card.classList.add('active-card');
-                                  item.style.opacity = '1';
-                                  item.style.transform = 'scale(1)';
-                             } else if (window.innerWidth < 768) {
-                                  card.classList.remove('active-card');
-                                  item.style.opacity = '0.7';
-                                  item.style.transform = 'scale(0.95)';
-                             } else {
-                                  // Desktop reset
-                                  item.style.opacity = '1';
-                                  item.style.transform = 'scale(1)';
-                             }
-                        });
+                // --- Interaction Logic ---
+                let isDown = false;
+                let startX;
+                let scrollLeftState;
+                let draggedItemIdx = -1;
+
+                const startDragging = (e) => {
+                    if (e.touches) return; // Allow native touch on mobile
+                    isDown = true;
+                    carousel.classList.add("grabbing");
+                    carousel.style.scrollSnapType = "none";
+                    carousel.style.scrollBehavior = "auto";
+
+                    startX = e.pageX - carousel.offsetLeft;
+                    scrollLeftState = carousel.scrollLeft;
+
+                    // Apply hover effect to current item on mobile during drag (if screen size allows drag but is somehow treated as mobile? unlikely based on isDesktop check, but kept for parity)
+                    const isDesktop = window.innerWidth >= 1024;
+                    if (!isDesktop) {
+                        draggedItemIdx = currentPageIdx;
+                        const draggedCard = items[draggedItemIdx]?.querySelector(".service-card");
+                        draggedCard?.classList.add("active-card");
                     }
                 };
 
-                // Listen for scroll
-                carousel.addEventListener('scroll', () => {
-                   requestAnimationFrame(updateUI); 
+                const moveDragging = (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+
+                    const x = e.pageX - carousel.offsetLeft;
+                    carousel.scrollLeft = scrollLeftState - (x - startX);
+                };
+
+                const stopDragging = () => {
+                    if (!isDown) return;
+                    isDown = false;
+                    carousel.classList.remove("grabbing");
+
+                    const isDesktop = window.innerWidth >= 1024;
+                    const itemWidth = items[0].offsetWidth + 32;
+                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                    const currentScroll = carousel.scrollLeft;
+
+                    let target;
+
+                    if (isDesktop) {
+                        // Desktop: snap to one of two visible sections
+                        target = currentScroll > maxScroll / 2 ? maxScroll : 0;
+                    } else {
+                        // Mobile logic if drag was enabled there, or desktop narrow?
+                        // Actually desktop logic applies here mostly
+                        let currentIdx = Math.round(currentScroll / itemWidth);
+                        let nextIdx = currentIdx;
+
+                        const distanceMoved = Math.abs(currentScroll - scrollLeftState);
+                        const threshold = itemWidth * 0.05;
+
+                        if (distanceMoved > threshold) {
+                            nextIdx =
+                            currentScroll > scrollLeftState ? currentIdx + 1 : currentIdx - 1;
+                        }
+
+                        nextIdx = Math.min(items.length - 1, Math.max(0, nextIdx));
+                        target = nextIdx * itemWidth;
+                    }
+
+                    // Fast smooth animation using requestAnimationFrame
+                    const startScroll = carousel.scrollLeft;
+                    const distance = target - startScroll;
+                    const duration = 150; 
+                    const startTime = performance.now();
+
+                    const animateScroll = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        // Smooth easing
+                        let easeProgress;
+                        if (progress < 0.5) {
+                            easeProgress = 2 * progress * progress;
+                        } else {
+                            easeProgress = -1 + (4 - 2 * progress) * progress;
+                        }
+
+                        carousel.scrollLeft = startScroll + distance * easeProgress;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animateScroll);
+                        } else {
+                            carousel.scrollLeft = target;
+                            
+                             if (draggedItemIdx >= 0) {
+                                const oldCard = items[draggedItemIdx]?.querySelector(".service-card");
+                                oldCard?.classList.remove("active-card");
+                                draggedItemIdx = -1;
+                            }
+
+                            carousel.style.scrollSnapType = "x mandatory";
+                            updateUI();
+                        }
+                    };
+
+                    requestAnimationFrame(animateScroll);
+                };
+
+                carousel.addEventListener("mousedown", startDragging);
+                window.addEventListener("mousemove", moveDragging);
+                window.addEventListener("mouseup", stopDragging);
+                
+                // Keep touch logic simple/native
+                carousel.addEventListener("scroll", () => {
+                    requestAnimationFrame(updateUI);
                 }, { passive: true });
 
-                updateUI(); // Initial call
-                updateDots();
-                
-                // Add CSS for active card transition scaling
-                const itemStyle = items[0]?.style;
-                if(itemStyle) {
-                    items.forEach(item => {
-                        item.style.transition = 'all 0.4s ease';
-                    });
-                }
+                updateUI();
+                window.addEventListener("resize", updateUI);
             })();
         </script>
     </section>
