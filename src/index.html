@@ -164,13 +164,21 @@
 
       .service-card {
         height: 520px;
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         z-index: 10;
         cursor: pointer;
       }
       .service-card:hover,
       .service-card.active-card {
         z-index: 50;
+      }
+
+      /* Mobile: Lift effect on active slide */
+      @media (max-width: 1023px) {
+        .swiper-slide-active .service-card {
+          transform: translateY(-12px) scale(1.02);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
       }
 
       /* Mobile: Show hover content on active slide only */
