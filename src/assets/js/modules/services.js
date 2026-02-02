@@ -60,24 +60,36 @@ const getCategories = async () => {
 };
 
 export const initServices = async () => {
-  const carousel = document.getElementById("services-carousel");
-  if (!carousel) return;
+  try {
+    const carousel = document.getElementById("services-carousel");
+    console.log("🔍 Carousel element:", carousel);
+    if (!carousel) {
+      console.error("❌ Carousel element not found");
+      return;
+    }
 
-  const wrapper = carousel.querySelector(".swiper-wrapper");
-  wrapper.innerHTML =
-    '<div style="width: 100%; text-align: center; padding: 40px; color: rgba(107, 114, 128, 0.6);">Cargando servicios...</div>';
+    const wrapper = carousel.querySelector(".swiper-wrapper");
+    console.log("🔍 Wrapper element:", wrapper);
+    if (!wrapper) {
+      console.error("❌ Wrapper element not found");
+      return;
+    }
 
-  const servicesData = await getCategories();
+    wrapper.innerHTML =
+      '<div style="width: 100%; text-align: center; padding: 40px; color: rgba(107, 114, 128, 0.6);">Cargando servicios...</div>';
 
-  // Render Cards with Swiper structure
-  wrapper.innerHTML = servicesData
-    .map((service) => {
-      const rawTag = service.tag || service.title || "servicio";
-      const slug = encodeURIComponent(
-        rawTag.trim().toLowerCase().replace(/\s+/g, "-"),
-      );
+    const servicesData = await getCategories();
+    console.log("📊 Services data received:", servicesData);
 
-      return `
+    // Render Cards with Swiper structure
+    wrapper.innerHTML = servicesData
+      .map((service) => {
+        const rawTag = service.tag || service.title || "servicio";
+        const slug = encodeURIComponent(
+          rawTag.trim().toLowerCase().replace(/\s+/g, "-"),
+        );
+
+        return `
         <div class="swiper-slide">
           <a href="servicio?slug=${slug}" class="service-card group relative block overflow-hidden rounded-[2.5rem] cursor-pointer shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-sm w-full h-full">
             <div class="card-image absolute inset-0 z-0">
@@ -100,7 +112,7 @@ export const initServices = async () => {
                   ${service.description}
                 </p>
                 <div class="pt-2">
-                  <div class="relative w-full flex items-center justify-between px-6 py-4 rounded-3xl font-bold text-sm bg-white/20 text-white border border-white/20 backdrop-blur-md transition-transform active:scale-95">
+                  <div class="relative w-full flex items-center justify-between px-6 py-4 rounded-3xl font-bold text-sm bg-white/20 text-white border border-white/20 backdrop-blur-md transition-transform active:scale-95 mb-6">
                     <span>Ver servicios</span>
                     <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white/30">
                       <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-14c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-12c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2v-4h2v4zm5 4h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
@@ -112,64 +124,93 @@ export const initServices = async () => {
           </a>
         </div>
       `;
-    })
-    .join("");
+      })
+      .join("");
 
-  // Initialize Swiper
-  const swiper = new window.Swiper("#services-carousel", {
-    slidesPerView: "auto",
-    spaceBetween: 24,
-    centeredSlides: false,
-    grabCursor: true,
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-      dynamicBullets: false,
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        spaceBetween: 24,
+    // Initialize Swiper
+    const swiper = new window.Swiper("#services-carousel", {
+      slidesPerView: 1.1,
+      spaceBetween: 16,
+      grabCursor: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        dynamicBullets: false,
       },
-      640: {
-        slidesPerView: 1,
-        spaceBetween: 24,
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+          centeredSlides: false,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 24,
+          centeredSlides: false,
+        },
       },
-      1024: {
-        slidesPerView: 3,
-        spaceBetween: 24,
-        centeredSlides: false,
+      observer: true,
+      observeParents: true,
+      on: {
+        init: function () {
+          // Update pagination on init
+          updatePagination(this);
+        },
+        slideChange: function () {
+          updatePagination(this);
+        },
       },
-    },
-    on: {
-      init: function () {
-        // Update pagination on init
-        updatePagination(this);
-      },
-      slideChange: function () {
-        updatePagination(this);
-      },
-    },
-  });
+    });
 
-  function updatePagination(swiper) {
-    const isDesktop = window.innerWidth >= 1024;
-    const bullets = document.querySelectorAll(".swiper-pagination-bullet");
+    function updatePagination(swiper) {
+      const isDesktop = window.innerWidth >= 1024;
+      const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+      const bullets = document.querySelectorAll(".swiper-pagination-bullet");
+      let totalPages = swiper.slides.length;
 
-    if (isDesktop) {
-      // Desktop: show 2 pages
-      const totalPages = Math.ceil(swiper.slides.length / 3);
+      // Calculate total pages based on slides per view
+      if (isDesktop && swiper.slides.length > 3) {
+        totalPages = Math.ceil((swiper.slides.length - 3) / 1) + 1;
+      } else if (isTablet && swiper.slides.length > 2) {
+        totalPages = Math.ceil((swiper.slides.length - 2) / 1) + 1;
+      }
 
-      document
-        .querySelectorAll(".swiper-pagination-bullet")
-        .forEach((bullet) => {
-          bullet.style.display =
-            Array.from(bullets).indexOf(bullet) < totalPages ? "block" : "none";
-        });
+      // Show/hide bullets based on total pages
+      bullets.forEach((bullet, index) => {
+        bullet.style.display = index < totalPages ? "inline-block" : "none";
+      });
+
+      // Highlight the active bullet based on current slide
+      const currentSlide = swiper.activeIndex;
+      bullets.forEach((bullet, index) => {
+        if (index === currentSlide) {
+          bullet.classList.add("swiper-pagination-bullet-active");
+        } else {
+          bullet.classList.remove("swiper-pagination-bullet-active");
+        }
+      });
+
+      // Mark the active slide to show hover effect automatically
+      swiper.slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add("active-card");
+        } else {
+          slide.classList.remove("active-card");
+        }
+      });
     }
-  }
 
-  window.addEventListener("resize", () => {
-    swiper.update();
-  });
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        swiper.update();
+        updatePagination(swiper);
+      }, 150);
+    });
+
+    console.log("✅ Services carousel initialized successfully");
+  } catch (error) {
+    console.error("❌ Error initializing services:", error);
+  }
 };

@@ -10,11 +10,53 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
     <!-- Motion One -->
     <script src="https://unpkg.com/motion@11.11.13/dist/motion.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
     <style>
       body {
         font-family: "Inter", sans-serif;
+      }
+
+      /* Swiper Carousel Styles */
+      .swiper-slide {
+        height: auto;
+        flex-shrink: 0;
+      }
+
+      .swiper-pagination-bullet {
+        background: rgba(20, 184, 166, 0.2) !important;
+        width: 8px !important;
+        height: 8px !important;
+      }
+
+      .swiper-pagination-bullet-active {
+        background: rgb(20, 184, 166) !important;
+        width: 32px !important;
+        border-radius: 4px !important;
+      }
+
+      /* Active card hover effect on mobile */
+      @media (max-width: 1023px) {
+        .service-card.active-card .card-image img {
+          transform: scale(1.1) !important;
+          filter: brightness(0.75) !important;
+        }
+        .service-card.active-card .card-overlay {
+          opacity: 0.5 !important;
+          backdrop-filter: blur(2px) !important;
+        }
+        .service-card.active-card .card-initial {
+          opacity: 0 !important;
+          transform: translateY(-1rem) !important;
+        }
+        .service-card.active-card .card-hover-content {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+        }
       }
     </style>
   </head>

@@ -30,9 +30,20 @@
         position: relative;
       }
 
+      /* Force mobile gradient colors */
+      @media (max-width: 1023px) {
+        #hero-background {
+          background: linear-gradient(180deg, rgb(220, 235, 250), rgb(240, 253, 244)) !important;
+        }
+      }
+
       :root {
         /* Mobile Colors (Green Palette) */
-        --gradient-background-start: rgb(255, 255, 255); /* White background */
+        --gradient-background-start: rgb(
+          220,
+          235,
+          250
+        ); /* Light blue tint */
         --gradient-background-end: rgb(
           240,
           253,
@@ -103,53 +114,33 @@
       }
 
       .animate-first {
-        animation: moveInCircle 30s linear infinite;
+        animation: moveInCircle 26s linear infinite;
       }
       .animate-second {
-        animation: moveVertical 30s ease infinite;
+        animation: moveVertical 24s ease infinite;
       }
       .animate-third {
-        animation: moveInCircle 40s linear infinite;
+        animation: moveInCircle 28s linear infinite;
       }
       .animate-fourth {
-        animation: moveHorizontal 40s ease infinite;
+        animation: moveHorizontal 21s ease infinite;
       }
       .animate-fifth {
-        animation: moveInCircle 20s ease infinite;
+        animation: moveInCircle 30s ease infinite;
       }
 
       /* Service Card & Carousel Styles - Swiper */
       #services-carousel {
         padding: 1rem 0 2rem 0;
-        margin: 0 auto;
-        width: 100%;
       }
 
       #services-carousel .swiper-wrapper {
-        gap: 1.5rem;
-        justify-content: center;
+        display: flex;
       }
 
       .swiper-slide {
-        width: 85vw !important;
-        max-width: 340px !important;
         height: auto;
-      }
-
-      @media (min-width: 640px) {
-        .swiper-slide {
-          width: 380px !important;
-        }
-      }
-
-      @media (min-width: 1024px) {
-        #services-carousel {
-          margin: 0;
-          width: 100%;
-        }
-        .swiper-slide {
-          width: calc(33.333% - 1rem) !important;
-        }
+        flex-shrink: 0;
       }
 
       .swiper-pagination-bullet {
@@ -578,10 +569,11 @@
       </header>
       <section
         id="hero-container"
-        class="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
+        class="relative w-full min-h-screen flex items-center justify-center"
       >
         <div
-          class="absolute inset-0 overflow-hidden pointer-events-none -z-10 bg-[linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))]"
+          id="hero-background"
+          class="absolute top-0 left-0 w-full overflow-hidden pointer-events-none -z-10 bg-[linear-gradient(40deg,var(--gradient-background-start),var(--gradient-background-end))]"
         >
           <svg class="hidden">
             <defs>
@@ -625,6 +617,11 @@
               class="hidden lg:block absolute [background:radial-gradient(circle_at_center,_rgba(var(--pointer-color),_1)_0,_rgba(var(--pointer-color),_0)_50%)_no-repeat] [mix-blend-mode:var(--blending-value)] w-[400px] h-[400px] -top-[200px] -left-[200px] opacity-70"
             ></div>
           </div>
+
+          <!-- Fade Gradient Overlay -->
+          <div
+            class="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"
+          ></div>
         </div>
 
         <!-- Main Content -->
@@ -2136,39 +2133,6 @@
         );
         if (detailContainer) {
           initServiceDetail();
-        }
-
-        // Header scroll effect - change background when scrolling past hero
-        const header = document.getElementById("main-header");
-        const heroContainer = document.getElementById("hero-container");
-
-        window.addEventListener("scroll", () => {
-          if (heroContainer) {
-            const heroHeight = heroContainer.offsetHeight;
-            if (window.scrollY > heroHeight * 0.3) {
-              header.classList.add("scrolled");
-            } else {
-              header.classList.remove("scrolled");
-            }
-          }
-        });
-
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-        const mobileMenu = document.getElementById("mobile-menu");
-
-        if (mobileMenuBtn && mobileMenu) {
-          mobileMenuBtn.addEventListener("click", () => {
-            mobileMenu.classList.toggle("hidden");
-          });
-
-          // Close menu when clicking on a link
-          const mobileMenuLinks = mobileMenu.querySelectorAll("a, button");
-          mobileMenuLinks.forEach((link) => {
-            link.addEventListener("click", () => {
-              mobileMenu.classList.add("hidden");
-            });
-          });
         }
       });
     </script>
