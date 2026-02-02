@@ -10,6 +10,11 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/motion@11.11.13/dist/motion.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -113,53 +118,48 @@
         animation: moveInCircle 20s ease infinite;
       }
 
-      /* Service Card & Carousel Styles */
-      .carousel-container {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
+      /* Service Card & Carousel Styles - Swiper */
+      #services-carousel {
+        padding: 1rem 0 2rem 0;
+        margin: 0 -5%;
+        width: calc(100% + 10%);
+      }
+
+      #services-carousel .swiper-wrapper {
         gap: 1.5rem;
-        padding-bottom: 2rem;
-        padding-top: 1rem;
-        padding-left: 5%;
-        padding-right: 5%;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        user-select: none;
-        cursor: grab;
       }
-      .carousel-container:active {
-        cursor: grabbing;
-      }
-      .carousel-container::-webkit-scrollbar {
-        display: none;
-      }
-      .carousel-item {
-        flex: 0 0 auto;
-        width: 300px;
-        scroll-snap-align: center;
-        scroll-snap-stop: always;
-        transition:
-          opacity 0.2s ease-out,
-          transform 0.2s ease-out;
+
+      .swiper-slide {
+        width: 360px !important;
+        height: auto;
       }
 
       @media (min-width: 640px) {
-        .carousel-item {
-          width: 320px;
+        .swiper-slide {
+          width: 400px !important;
         }
       }
 
       @media (min-width: 1024px) {
-        .carousel-item {
-          flex: 0 0 calc(33.333% - 1rem);
-          width: auto;
-          scroll-snap-align: start;
+        #services-carousel {
+          margin: 0;
+          width: 100%;
         }
+        .swiper-slide {
+          width: calc(33.333% - 1rem) !important;
+        }
+      }
+
+      .swiper-pagination-bullet {
+        background: rgba(20, 184, 166, 0.2) !important;
+        width: 8px !important;
+        height: 8px !important;
+      }
+
+      .swiper-pagination-bullet-active {
+        background: rgb(20, 184, 166) !important;
+        width: 32px !important;
+        border-radius: 4px !important;
       }
 
       .service-card {
@@ -171,6 +171,26 @@
       .service-card:hover,
       .service-card.active-card {
         z-index: 50;
+      }
+
+      /* Mobile: Always show hover content on all cards (with hover effects) */
+      @media (max-width: 1023px) {
+        .service-card .card-image img {
+          transform: scale(1.1);
+          filter: brightness(0.75);
+        }
+        .service-card .card-overlay {
+          opacity: 0.5;
+          backdrop-filter: blur(2px);
+        }
+        .service-card .card-initial {
+          opacity: 0;
+          transform: translateY(-1rem);
+        }
+        .service-card .card-hover-content {
+          opacity: 1 !important;
+          transform: translateY(0) !important;
+        }
       }
 
       /* Replicate hover behavior for active mobile card */
@@ -324,24 +344,33 @@
         transform: translateY(0);
       }
 
-      /* Mobile Carousel specific */
+      /* Testimonials Carousel - Swiper */
       #testimonials-carousel {
-        cursor: grab;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        padding: 0 -1rem;
       }
-      #testimonials-carousel:active {
-        cursor: grabbing;
+
+      #testimonials-carousel .swiper-slide {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0 1rem;
       }
-      #testimonials-carousel .carousel-item {
-        transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        opacity: 0.4;
-        transform: scale(0.9);
+
+      #testimonials-carousel .swiper-pagination {
+        margin-top: 2rem;
       }
-      #testimonials-carousel .carousel-item.active {
-        opacity: 1;
-        transform: scale(1);
+
+      #testimonials-carousel .swiper-pagination-bullet {
+        background: rgba(20, 184, 166, 0.2) !important;
+        width: 8px !important;
+        height: 8px !important;
+      }
+
+      #testimonials-carousel .swiper-pagination-bullet-active {
+        background: rgb(20, 184, 166) !important;
+        width: 32px !important;
+        border-radius: 4px !important;
       }
 
       /* Benefits Section Styles */
@@ -393,6 +422,163 @@
       }
       .animate-in {
         animation: fade-in-up 0.3s ease-out forwards;
+      }
+    </style>
+
+    <style>
+      @keyframes move {
+        100% {
+          transform: translate3d(0, 0, 1px) rotate(360deg);
+        }
+      }
+
+      .background {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: #8494e7;
+        overflow: hidden;
+      }
+
+      .background span {
+        width: 50vmin;
+        height: 50vmin;
+        border-radius: 50vmin;
+        backface-visibility: hidden;
+        position: absolute;
+        animation: move;
+        animation-duration: 35;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+
+      .background span:nth-child(0) {
+        color: #78e8bd;
+        top: 58%;
+        left: 45%;
+        animation-duration: 101s;
+        animation-delay: -146s;
+        transform-origin: -9vw 16vh;
+        box-shadow: 100vmin 0 12.844686924427997vmin currentColor;
+      }
+      .background span:nth-child(1) {
+        color: #5cee3f;
+        top: 23%;
+        left: 45%;
+        animation-duration: 67s;
+        animation-delay: -14s;
+        transform-origin: 4vw -8vh;
+        box-shadow: 100vmin 0 13.126050471133704vmin currentColor;
+      }
+      .background span:nth-child(2) {
+        color: #2420f3;
+        top: 84%;
+        left: 12%;
+        animation-duration: 33s;
+        animation-delay: -42s;
+        transform-origin: -8vw -14vh;
+        box-shadow: -100vmin 0 13.052135186337873vmin currentColor;
+      }
+      .background span:nth-child(3) {
+        color: #2420f3;
+        top: 60%;
+        left: 13%;
+        animation-duration: 94s;
+        animation-delay: -103s;
+        transform-origin: 10vw 3vh;
+        box-shadow: 100vmin 0 12.64942618907634vmin currentColor;
+      }
+      .background span:nth-child(4) {
+        color: #2420f3;
+        top: 14%;
+        left: 84%;
+        animation-duration: 139s;
+        animation-delay: -149s;
+        transform-origin: -11vw 0vh;
+        box-shadow: 100vmin 0 13.154219335362347vmin currentColor;
+      }
+      .background span:nth-child(5) {
+        color: #5cee3f;
+        top: 20%;
+        left: 75%;
+        animation-duration: 13s;
+        animation-delay: -20s;
+        transform-origin: -3vw -17vh;
+        box-shadow: 100vmin 0 13.231081829551638vmin currentColor;
+      }
+      .background span:nth-child(6) {
+        color: #5cee3f;
+        top: 79%;
+        left: 22%;
+        animation-duration: 19s;
+        animation-delay: -139s;
+        transform-origin: 24vw -3vh;
+        box-shadow: -100vmin 0 13.446956932812185vmin currentColor;
+      }
+      .background span:nth-child(7) {
+        color: #78e8bd;
+        top: 60%;
+        left: 35%;
+        animation-duration: 88s;
+        animation-delay: -46s;
+        transform-origin: -19vw 10vh;
+        box-shadow: 100vmin 0 13.097976460586699vmin currentColor;
+      }
+      .background span:nth-child(8) {
+        color: #78e8bd;
+        top: 57%;
+        left: 80%;
+        animation-duration: 45s;
+        animation-delay: -117s;
+        transform-origin: -15vw 16vh;
+        box-shadow: -100vmin 0 13.287338887725204vmin currentColor;
+      }
+      .background span:nth-child(9) {
+        color: #2420f3;
+        top: 12%;
+        left: 86%;
+        animation-duration: 29s;
+        animation-delay: -144s;
+        transform-origin: -7vw 5vh;
+        box-shadow: -100vmin 0 13.279028104380897vmin currentColor;
+      }
+      .background span:nth-child(10) {
+        color: #78e8bd;
+        top: 38%;
+        left: 11%;
+        animation-duration: 79s;
+        animation-delay: -16s;
+        transform-origin: 17vw 17vh;
+        box-shadow: -100vmin 0 13.115140481818381vmin currentColor;
+      }
+      .background span:nth-child(11) {
+        color: #78e8bd;
+        top: 88%;
+        left: 43%;
+        animation-duration: 11s;
+        animation-delay: -121s;
+        transform-origin: 19vw 17vh;
+        box-shadow: 100vmin 0 13.090111570485023vmin currentColor;
+      }
+      .background span:nth-child(12) {
+        color: #78e8bd;
+        top: 44%;
+        left: 4%;
+        animation-duration: 26s;
+        animation-delay: -42s;
+        transform-origin: -19vw 22vh;
+        box-shadow: -100vmin 0 12.643295028254325vmin currentColor;
+      }
+      .background span:nth-child(13) {
+        color: #5cee3f;
+        top: 96%;
+        left: 66%;
+        animation-duration: 60s;
+        animation-delay: -55s;
+        transform-origin: 6vw 0vh;
+        box-shadow: -100vmin 0 12.570919013788677vmin currentColor;
       }
     </style>
   </head>
@@ -578,18 +764,15 @@
             </div>
           </div>
 
-          <!-- Carousel Container -->
+          <!-- Swiper Carousel Container -->
           <div class="relative group/carousel">
             <div
               id="services-carousel"
-              class="carousel-container overflow-x-auto"
-            ></div>
-
-            <!-- Dots Navigation -->
-            <div
-              id="carousel-dots"
-              class="flex justify-center gap-3 mt-12"
-            ></div>
+              class="swiper"
+            >
+              <div class="swiper-wrapper"></div>
+              <div class="swiper-pagination"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1610,11 +1793,12 @@
           <div class="md:hidden">
             <div
               id="testimonials-carousel"
-              class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 pb-8"
+              class="swiper"
             >
+              <div class="swiper-wrapper">
               <!-- Item 1 -->
               <div
-                class="carousel-item flex-none w-[85%] snap-center px-4 active"
+                class="swiper-slide"
               >
                 <div
                   class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
@@ -1642,7 +1826,7 @@
                 </div>
               </div>
               <!-- Item 2 -->
-              <div class="carousel-item flex-none w-[85%] snap-center px-4">
+              <div class="swiper-slide">
                 <div
                   class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
                 >
@@ -1669,7 +1853,7 @@
                 </div>
               </div>
               <!-- Item 3 -->
-              <div class="carousel-item flex-none w-[85%] snap-center px-4">
+              <div class="swiper-slide">
                 <div
                   class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
                 >
@@ -1695,13 +1879,9 @@
                   </div>
                 </div>
               </div>
+              </div>
+              <div class="swiper-pagination"></div>
             </div>
-
-            <!-- Pagination Dots -->
-            <div
-              id="testimonials-dots"
-              class="flex justify-center gap-3 mt-4"
-            ></div>
           </div>
         </div>
       </section>
@@ -1995,6 +2175,7 @@
     <script type="module">
       import { initServices } from "/assets/js/modules/services.js";
       import { initServiceDetail } from "/assets/js/modules/service-detail.js";
+      import { initTestimonials } from "/assets/js/modules/testimonials.js";
 
       document.addEventListener("DOMContentLoaded", () => {
         // Initialize services carousel on homepage
@@ -2002,6 +2183,9 @@
         if (carousel) {
           initServices();
         }
+
+        // Initialize testimonials carousel
+        initTestimonials();
 
         // Initialize service detail page
         const detailContainer = document.getElementById(
