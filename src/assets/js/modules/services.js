@@ -141,10 +141,12 @@ export const initServices = async () => {
       activePage = scrollLeft > maxScroll / 2 ? 1 : 0;
     } else {
       totalPages = items.length;
-      const itemWidth = items[0].offsetWidth + 24;
+      const itemWidth = items[0].offsetWidth + 24; // 300px + 24px gap
+      // Account for padding: first item starts at padding position
+      const paddingLeft = carousel.offsetWidth * 0.05;
       activePage = Math.min(
         items.length - 1,
-        Math.max(0, Math.round(scrollLeft / itemWidth)),
+        Math.max(0, Math.round((scrollLeft - paddingLeft) / itemWidth)),
       );
     }
 
@@ -161,11 +163,14 @@ export const initServices = async () => {
 
       dotsContainer.querySelectorAll(".carousel-dot").forEach((dot, i) => {
         dot.onclick = () => {
-          const target = isDesktop
-            ? i === 0
-              ? 0
-              : maxScroll
-            : i * (items[0].offsetWidth + 24);
+          let target;
+          if (isDesktop) {
+            target = i === 0 ? 0 : maxScroll;
+          } else {
+            const paddingLeft = carousel.offsetWidth * 0.05;
+            const itemWidth = items[0].offsetWidth + 24;
+            target = paddingLeft + i * itemWidth;
+          }
           carousel.style.scrollBehavior = "smooth";
           carousel.scrollTo({ left: target });
         };
@@ -237,6 +242,7 @@ export const initServices = async () => {
     const itemWidth = items[0].offsetWidth + 24;
     const maxScroll = carousel.scrollWidth - carousel.clientWidth;
     const currentScroll = carousel.scrollLeft;
+    const paddingLeft = carousel.offsetWidth * 0.05;
 
     let target;
 
@@ -245,7 +251,7 @@ export const initServices = async () => {
       target = currentScroll > maxScroll / 2 ? maxScroll : 0;
     } else {
       // Mobile: determine next item based on current scroll position
-      let currentIdx = Math.round(currentScroll / itemWidth);
+      let currentIdx = Math.round((currentScroll - paddingLeft) / itemWidth);
       let nextIdx = currentIdx;
 
       // If user dragged significantly or has velocity, move to next/previous
@@ -260,7 +266,7 @@ export const initServices = async () => {
 
       // Clamp to valid range
       nextIdx = Math.min(items.length - 1, Math.max(0, nextIdx));
-      target = nextIdx * itemWidth;
+      target = paddingLeft + nextIdx * itemWidth;
     }
 
     // Fast smooth animation using requestAnimationFrame
@@ -319,6 +325,15 @@ export const initServices = async () => {
   );
 
   // Initial Trigger
-  updateUI();
+  // Start at center for mobile
+  setTimeout(() => {
+    const isDesktop = window.innerWidth >= 1024;
+    if (!isDesktop) {
+      const paddingLeft = carousel.offsetWidth * 0.05;
+      carousel.scrollLeft = paddingLeft;
+    }
+    updateUI();
+  }, 100);
+
   window.addEventListener("resize", updateUI);
 };
