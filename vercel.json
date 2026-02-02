@@ -1,7 +1,9 @@
 {
   "version": 2,
   "outputDirectory": "src",
+  "cleanUrls": true,
   "rewrites": [
+    { "source": "/servicio", "destination": "/servicio.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
