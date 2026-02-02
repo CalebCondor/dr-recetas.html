@@ -452,51 +452,66 @@
       .animate-in {
         animation: fade-in-up 0.3s ease-out forwards;
       }
+
+      /* Header background - share with hero */
+      #main-header {
+        background: linear-gradient(40deg, var(--gradient-background-start), var(--gradient-background-end)) !important;
+        position: relative;
+      }
+
+      #main-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: -1;
+        background: inherit;
+      }
     </style>
   </head>
   <body
     class="text-slate-900 relative min-h-screen antialiased bg-gradient-mesh"
   >
-    <header
-      id="main-header"
-      class="w-full sticky top-0 left-0 z-40 transition-all duration-300 bg-transparent"
-    >
-      <div
-        class="w-full px-6 md:px-12 lg:px-[8%] flex items-center justify-between py-4 lg:py-5"
-      >
-        <a href="/">
-          <img
-            src="assets/images/logo.png"
-            alt="Dr. Recetas"
-            class="h-8 lg:h-10"
-          />
-        </a>
-        <nav class="hidden md:flex items-center gap-8 lg:gap-12">
-          <a
-            href="#servicios"
-            class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
-            >Servicios</a
-          >
-          <a
-            href="#descuentos"
-            class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
-            >Descuentos</a
-          >
-          <a
-            href="#nosotros"
-            class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
-            >Nosotros</a
-          >
-          <button
-            class="px-8 py-3 rounded-full bg-white text-slate-500 font-semibold border border-slate-100 shadow-sm hover:bg-slate-50 transition-all text-sm h-auto"
-          >
-            Iniciar sesión
-          </button>
-        </nav>
-      </div>
-    </header>
-
     <main>
+      <header
+        id="main-header"
+        class="w-full sticky top-0 left-0 z-40 transition-all duration-300 bg-transparent"
+      >
+        <div
+          class="w-full px-6 md:px-12 lg:px-[8%] flex items-center justify-between py-4 lg:py-5"
+        >
+          <a href="/">
+            <img
+              src="assets/images/logo.png"
+              alt="Dr. Recetas"
+              class="h-8 lg:h-10"
+            />
+          </a>
+          <nav class="hidden md:flex items-center gap-8 lg:gap-12">
+            <a
+              href="#servicios"
+              class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
+              >Servicios</a
+            >
+            <a
+              href="#descuentos"
+              class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
+              >Descuentos</a
+            >
+            <a
+              href="#nosotros"
+              class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm"
+              >Nosotros</a
+            >
+            <button
+              class="px-8 py-3 rounded-full bg-white text-slate-500 font-semibold border border-slate-100 shadow-sm hover:bg-slate-50 transition-all text-sm h-auto"
+            >
+              Iniciar sesión
+            </button>
+          </nav>
+        </div>
+      </header>
       <section
         id="hero-container"
         class="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
