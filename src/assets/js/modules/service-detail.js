@@ -183,7 +183,7 @@ const renderCard = (item, idx, className, slug) => {
 
   return `
     <div class="${className} h-full opacity-0 scale-90 will-change-transform" id="item-${idx}">
-        <a href="/servicios/${slug}/${item.slug}" class="group relative rounded-[3rem] overflow-hidden ${currentBg} h-full flex flex-col p-8 md:p-12 transition-all duration-700 shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:shadow-[0_45px_90px_rgba(13,75,77,0.15)] border backdrop-blur-md block">
+        <a href="/detalle?slug=${item.slug}" class="group relative rounded-[3rem] overflow-hidden ${currentBg} h-full flex flex-col p-8 md:p-12 transition-all duration-700 shadow-[0_10px_40px_rgba(0,0,0,0.05)] hover:shadow-[0_45px_90px_rgba(13,75,77,0.15)] border backdrop-blur-md block">
             
             <!-- Shine Effect -->
             <div class="absolute inset-0 transition-opacity duration-1000 pointer-events-none opacity-0 group-hover:opacity-100">
