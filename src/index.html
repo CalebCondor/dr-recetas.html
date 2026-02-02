@@ -164,21 +164,13 @@
 
       .service-card {
         height: 520px;
-        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         z-index: 10;
         cursor: pointer;
       }
       .service-card:hover,
       .service-card.active-card {
         z-index: 50;
-      }
-
-      /* Mobile: Lift effect on active slide */
-      @media (max-width: 1023px) {
-        .swiper-slide-active .service-card {
-          transform: translateY(-12px) scale(1.02);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
       }
 
       /* Mobile: Show hover content on active slide only */
@@ -206,20 +198,27 @@
 
         /* Active slide: show hover effects */
         .swiper-slide-active .service-card .card-image img {
-          transform: scale(1.1);
-          filter: brightness(0.75);
+          transform: scale(1.1) !important;
+          filter: brightness(0.75) !important;
+          transition: all 0.5s ease !important;
         }
         .swiper-slide-active .service-card .card-overlay {
-          opacity: 0.5;
-          backdrop-filter: blur(2px);
+          opacity: 0.5 !important;
+          backdrop-filter: blur(2px) !important;
+          transition: all 0.5s ease !important;
         }
         .swiper-slide-active .service-card .card-initial {
-          opacity: 0;
-          transform: translateY(-1rem);
+          opacity: 0 !important;
+          transform: translateY(-1rem) !important;
+          transition: all 0.5s ease !important;
         }
         .swiper-slide-active .service-card .card-hover-content {
           opacity: 1 !important;
           transform: translateY(0) !important;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          gap: 1rem;
         }
       }
 
