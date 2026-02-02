@@ -173,21 +173,43 @@
         z-index: 50;
       }
 
-      /* Mobile: Always show hover content on all cards (with hover effects) */
+      /* Mobile: Show hover content on active slide only */
       @media (max-width: 1023px) {
         .service-card .card-image img {
+          transform: none;
+          filter: none;
+          transition: all 0.5s ease;
+        }
+        .service-card .card-overlay {
+          opacity: 0;
+          backdrop-filter: none;
+          transition: all 0.5s ease;
+        }
+        .service-card .card-initial {
+          opacity: 1;
+          transform: none;
+          transition: all 0.5s ease;
+        }
+        .service-card .card-hover-content {
+          opacity: 0 !important;
+          transform: translateY(8px) !important;
+          transition: all 0.5s ease;
+        }
+
+        /* Active slide: show hover effects */
+        .swiper-slide-active .service-card .card-image img {
           transform: scale(1.1);
           filter: brightness(0.75);
         }
-        .service-card .card-overlay {
+        .swiper-slide-active .service-card .card-overlay {
           opacity: 0.5;
           backdrop-filter: blur(2px);
         }
-        .service-card .card-initial {
+        .swiper-slide-active .service-card .card-initial {
           opacity: 0;
           transform: translateY(-1rem);
         }
-        .service-card .card-hover-content {
+        .swiper-slide-active .service-card .card-hover-content {
           opacity: 1 !important;
           transform: translateY(0) !important;
         }
@@ -424,163 +446,6 @@
         animation: fade-in-up 0.3s ease-out forwards;
       }
     </style>
-
-    <style>
-      @keyframes move {
-        100% {
-          transform: translate3d(0, 0, 1px) rotate(360deg);
-        }
-      }
-
-      .background {
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        background: #8494e7;
-        overflow: hidden;
-      }
-
-      .background span {
-        width: 50vmin;
-        height: 50vmin;
-        border-radius: 50vmin;
-        backface-visibility: hidden;
-        position: absolute;
-        animation: move;
-        animation-duration: 35;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-      }
-
-      .background span:nth-child(0) {
-        color: #78e8bd;
-        top: 58%;
-        left: 45%;
-        animation-duration: 101s;
-        animation-delay: -146s;
-        transform-origin: -9vw 16vh;
-        box-shadow: 100vmin 0 12.844686924427997vmin currentColor;
-      }
-      .background span:nth-child(1) {
-        color: #5cee3f;
-        top: 23%;
-        left: 45%;
-        animation-duration: 67s;
-        animation-delay: -14s;
-        transform-origin: 4vw -8vh;
-        box-shadow: 100vmin 0 13.126050471133704vmin currentColor;
-      }
-      .background span:nth-child(2) {
-        color: #2420f3;
-        top: 84%;
-        left: 12%;
-        animation-duration: 33s;
-        animation-delay: -42s;
-        transform-origin: -8vw -14vh;
-        box-shadow: -100vmin 0 13.052135186337873vmin currentColor;
-      }
-      .background span:nth-child(3) {
-        color: #2420f3;
-        top: 60%;
-        left: 13%;
-        animation-duration: 94s;
-        animation-delay: -103s;
-        transform-origin: 10vw 3vh;
-        box-shadow: 100vmin 0 12.64942618907634vmin currentColor;
-      }
-      .background span:nth-child(4) {
-        color: #2420f3;
-        top: 14%;
-        left: 84%;
-        animation-duration: 139s;
-        animation-delay: -149s;
-        transform-origin: -11vw 0vh;
-        box-shadow: 100vmin 0 13.154219335362347vmin currentColor;
-      }
-      .background span:nth-child(5) {
-        color: #5cee3f;
-        top: 20%;
-        left: 75%;
-        animation-duration: 13s;
-        animation-delay: -20s;
-        transform-origin: -3vw -17vh;
-        box-shadow: 100vmin 0 13.231081829551638vmin currentColor;
-      }
-      .background span:nth-child(6) {
-        color: #5cee3f;
-        top: 79%;
-        left: 22%;
-        animation-duration: 19s;
-        animation-delay: -139s;
-        transform-origin: 24vw -3vh;
-        box-shadow: -100vmin 0 13.446956932812185vmin currentColor;
-      }
-      .background span:nth-child(7) {
-        color: #78e8bd;
-        top: 60%;
-        left: 35%;
-        animation-duration: 88s;
-        animation-delay: -46s;
-        transform-origin: -19vw 10vh;
-        box-shadow: 100vmin 0 13.097976460586699vmin currentColor;
-      }
-      .background span:nth-child(8) {
-        color: #78e8bd;
-        top: 57%;
-        left: 80%;
-        animation-duration: 45s;
-        animation-delay: -117s;
-        transform-origin: -15vw 16vh;
-        box-shadow: -100vmin 0 13.287338887725204vmin currentColor;
-      }
-      .background span:nth-child(9) {
-        color: #2420f3;
-        top: 12%;
-        left: 86%;
-        animation-duration: 29s;
-        animation-delay: -144s;
-        transform-origin: -7vw 5vh;
-        box-shadow: -100vmin 0 13.279028104380897vmin currentColor;
-      }
-      .background span:nth-child(10) {
-        color: #78e8bd;
-        top: 38%;
-        left: 11%;
-        animation-duration: 79s;
-        animation-delay: -16s;
-        transform-origin: 17vw 17vh;
-        box-shadow: -100vmin 0 13.115140481818381vmin currentColor;
-      }
-      .background span:nth-child(11) {
-        color: #78e8bd;
-        top: 88%;
-        left: 43%;
-        animation-duration: 11s;
-        animation-delay: -121s;
-        transform-origin: 19vw 17vh;
-        box-shadow: 100vmin 0 13.090111570485023vmin currentColor;
-      }
-      .background span:nth-child(12) {
-        color: #78e8bd;
-        top: 44%;
-        left: 4%;
-        animation-duration: 26s;
-        animation-delay: -42s;
-        transform-origin: -19vw 22vh;
-        box-shadow: -100vmin 0 12.643295028254325vmin currentColor;
-      }
-      .background span:nth-child(13) {
-        color: #5cee3f;
-        top: 96%;
-        left: 66%;
-        animation-duration: 60s;
-        animation-delay: -55s;
-        transform-origin: 6vw 0vh;
-        box-shadow: -100vmin 0 12.570919013788677vmin currentColor;
-      }
-    </style>
   </head>
   <body
     class="text-slate-900 relative min-h-screen antialiased bg-gradient-mesh"
@@ -766,10 +631,7 @@
 
           <!-- Swiper Carousel Container -->
           <div class="relative group/carousel">
-            <div
-              id="services-carousel"
-              class="swiper"
-            >
+            <div id="services-carousel" class="swiper">
               <div class="swiper-wrapper"></div>
               <div class="swiper-pagination"></div>
             </div>
@@ -1791,94 +1653,89 @@
 
           <!-- Mobile Carousel Layout -->
           <div class="md:hidden">
-            <div
-              id="testimonials-carousel"
-              class="swiper"
-            >
+            <div id="testimonials-carousel" class="swiper">
               <div class="swiper-wrapper">
-              <!-- Item 1 -->
-              <div
-                class="swiper-slide"
-              >
-                <div
-                  class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
-                >
-                  <p class="text-gray-500 text-base italic leading-relaxed">
-                    "Excelente servicio, la receta me llegó a mi email en menos
-                    de 10 minutos. Muy recomendado."
-                  </p>
+                <!-- Item 1 -->
+                <div class="swiper-slide">
                   <div
-                    class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
-                  ></div>
-                </div>
-                <div class="flex items-center gap-4 pl-6">
-                  <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop"
-                    alt="María"
-                    class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
-                  />
-                  <div>
-                    <h4 class="font-bold text-[#0D4B4D]">María Rodríguez</h4>
-                    <p class="text-xs text-teal-600 font-bold uppercase">
-                      Paciente
+                    class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
+                  >
+                    <p class="text-gray-500 text-base italic leading-relaxed">
+                      "Excelente servicio, la receta me llegó a mi email en
+                      menos de 10 minutos. Muy recomendado."
                     </p>
+                    <div
+                      class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
+                    ></div>
+                  </div>
+                  <div class="flex items-center gap-4 pl-6">
+                    <img
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop"
+                      alt="María"
+                      class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                    />
+                    <div>
+                      <h4 class="font-bold text-[#0D4B4D]">María Rodríguez</h4>
+                      <p class="text-xs text-teal-600 font-bold uppercase">
+                        Paciente
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Item 2 -->
-              <div class="swiper-slide">
-                <div
-                  class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
-                >
-                  <p class="text-gray-500 text-base italic leading-relaxed">
-                    "La atención del Dr. fue excepcional. Pude resolver mi
-                    refill de medicamentos sin salir de casa."
-                  </p>
+                <!-- Item 2 -->
+                <div class="swiper-slide">
                   <div
-                    class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
-                  ></div>
-                </div>
-                <div class="flex items-center gap-4 pl-6">
-                  <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
-                    alt="Carlos"
-                    class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
-                  />
-                  <div>
-                    <h4 class="font-bold text-[#0D4B4D]">Carlos Ortiz</h4>
-                    <p class="text-xs text-teal-600 font-bold uppercase">
-                      Paciente
+                    class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
+                  >
+                    <p class="text-gray-500 text-base italic leading-relaxed">
+                      "La atención del Dr. fue excepcional. Pude resolver mi
+                      refill de medicamentos sin salir de casa."
                     </p>
+                    <div
+                      class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
+                    ></div>
+                  </div>
+                  <div class="flex items-center gap-4 pl-6">
+                    <img
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
+                      alt="Carlos"
+                      class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                    />
+                    <div>
+                      <h4 class="font-bold text-[#0D4B4D]">Carlos Ortiz</h4>
+                      <p class="text-xs text-teal-600 font-bold uppercase">
+                        Paciente
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Item 3 -->
-              <div class="swiper-slide">
-                <div
-                  class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
-                >
-                  <p class="text-gray-500 text-base italic leading-relaxed">
-                    "Muy fácil de usar. El proceso de pago con ATH Móvil fue
-                    súper rápido. ¡Gracias!"
-                  </p>
+                <!-- Item 3 -->
+                <div class="swiper-slide">
                   <div
-                    class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
-                  ></div>
-                </div>
-                <div class="flex items-center gap-4 pl-6">
-                  <img
-                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop"
-                    alt="Elena"
-                    class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
-                  />
-                  <div>
-                    <h4 class="font-bold text-[#0D4B4D]">Elena Rivera</h4>
-                    <p class="text-xs text-teal-600 font-bold uppercase">
-                      Paciente
+                    class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-100 relative mb-8"
+                  >
+                    <p class="text-gray-500 text-base italic leading-relaxed">
+                      "Muy fácil de usar. El proceso de pago con ATH Móvil fue
+                      súper rápido. ¡Gracias!"
                     </p>
+                    <div
+                      class="absolute -bottom-3 left-10 w-6 h-6 bg-white border-b border-r border-gray-100 transform rotate-45"
+                    ></div>
+                  </div>
+                  <div class="flex items-center gap-4 pl-6">
+                    <img
+                      src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop"
+                      alt="Elena"
+                      class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                    />
+                    <div>
+                      <h4 class="font-bold text-[#0D4B4D]">Elena Rivera</h4>
+                      <p class="text-xs text-teal-600 font-bold uppercase">
+                        Paciente
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
               <div class="swiper-pagination"></div>
             </div>
