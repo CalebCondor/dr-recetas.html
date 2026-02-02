@@ -121,22 +121,24 @@
       /* Service Card & Carousel Styles - Swiper */
       #services-carousel {
         padding: 1rem 0 2rem 0;
-        margin: 0 -5%;
-        width: calc(100% + 10%);
+        margin: 0 auto;
+        width: 100%;
       }
 
       #services-carousel .swiper-wrapper {
         gap: 1.5rem;
+        justify-content: center;
       }
 
       .swiper-slide {
-        width: 360px !important;
+        width: 85vw !important;
+        max-width: 340px !important;
         height: auto;
       }
 
       @media (min-width: 640px) {
         .swiper-slide {
-          width: 400px !important;
+          width: 380px !important;
         }
       }
 
