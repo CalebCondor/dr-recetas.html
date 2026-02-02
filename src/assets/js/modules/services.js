@@ -80,9 +80,9 @@ export const initServices = async () => {
       const slug = encodeURIComponent(
         rawTag.trim().toLowerCase().replace(/\s+/g, "-"),
       );
-      console.log(
-        `Service: ${service.title} -> Tag: ${rawTag} -> Slug: ${slug}`,
-      );
+      // console.log(
+      //   `Service: ${service.title} -> Tag: ${rawTag} -> Slug: ${slug}`,
+      // );
 
       return `
         <div class="carousel-item flex-shrink-0 w-[300px] h-[420px] p-2" data-index="${index}">
